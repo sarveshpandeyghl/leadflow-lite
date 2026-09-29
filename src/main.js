@@ -1,6 +1,6 @@
 import { createHttpClient } from './api/httpClient.js';
 import { createContactsApi } from './api/contactsApi.js';
-import { renderContactList } from './ui/contactList.js';
+import { mountContactSearch } from './ui/contactSearch.js';
 import { ContactPanel } from './ui/contactPanel.js';
 
 const LOCATION_ID = document.body.dataset.locationId || 'loc_demo';
@@ -15,7 +15,13 @@ const panel = new ContactPanel(document.getElementById('contact-panel'), contact
 async function boot() {
   const listEl = document.getElementById('contact-list');
   const { contacts } = await contactsApi.list(LOCATION_ID);
-  renderContactList(listEl, contacts);
+
+  mountContactSearch({
+    input: document.getElementById('contact-search'),
+    container: listEl,
+    pager: document.getElementById('contact-pager'),
+    getContacts: () => contacts,
+  });
 
   listEl.addEventListener('click', (e) => {
     const row = e.target.closest('.contact');
