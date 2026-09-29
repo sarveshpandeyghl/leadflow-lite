@@ -1,5 +1,6 @@
 import { createHttpClient } from './api/httpClient.js';
 import { createContactsApi } from './api/contactsApi.js';
+import { withContactCache } from './api/cachedContactsApi.js';
 import { renderContactList } from './ui/contactList.js';
 import { ContactPanel } from './ui/contactPanel.js';
 
@@ -9,7 +10,7 @@ const http = createHttpClient({
   baseUrl: '/api/v1',
   getToken: () => sessionStorage.getItem('accessToken'),
 });
-const contactsApi = createContactsApi(http);
+const contactsApi = withContactCache(createContactsApi(http));
 const panel = new ContactPanel(document.getElementById('contact-panel'), contactsApi);
 
 async function boot() {
